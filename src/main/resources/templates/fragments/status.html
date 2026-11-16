@@ -1,0 +1,12 @@
+<!-- Nome em português de cada status de consulta. Uso: th:replace="fragments/status :: label(${appointment.status.name()})" -->
+<th:block th:fragment="label(status)" th:switch="${status}"><span
+        th:case="'SCHEDULED'">Agendada</span><span
+        th:case="'FINISHED'">Realizada</span><span
+        th:case="'CONFIRMED'">Confirmada</span><span
+        th:case="'INVOICED'">Encerrada</span><span
+        th:case="'CANCELED'">Cancelada</span><span
+        th:case="'DENIED'">Contestação negada</span><span
+        th:case="'REJECTION_REQUESTED'">Contestação pedida</span><span
+        th:case="'REJECTED'">Contestação aceita</span><span
+        th:case="'EXCHANGE_REQUESTED'">Troca pedida</span><span
+        th:case="*" th:text="${status}">status</span></th:block>

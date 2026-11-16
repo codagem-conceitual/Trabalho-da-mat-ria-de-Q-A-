@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'','Escolher especialidade')}"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<body>
+<div class="row justify-content-center mt-4">
+    <div class="col-12 text-center">
+        <h3>Nova consulta</h3>
+        <p class="text-muted">Passo 2 de 3: escolha a especialidade.</p>
+    </div>
+</div>
+<div class="row align-items-center justify-content-center">
+    <div>
+        <table id="customers" class="table table-striped text-center">
+            <thead class="thead-dark">
+            <tr>
+                <th> Especialidade</th>
+                <th> Duração</th>
+                <th> Valor</th>
+                <th> Ação</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${works == null}">
+                <td colspan="4"> Nenhuma especialidade disponível</td>
+            </tr>
+            <tr th:each="work : ${works}">
+                <td><span th:text="${work.name}"> Psicologia </span></td>
+                <td><span th:text="${work.duration + ' min'}"> 50 min </span></td>
+                <td><span th:text="${work.price > 0 ? 'R$ ' + #numbers.formatDecimal(work.price, 1, 'POINT', 2, 'COMMA') : 'Gratuito'}"> Gratuito </span></td>
+                <td><a class="btn btn-primary"
+                       th:href="@{'/appointments/new/'+${providerId} +'/'+ ${work.id}}"
+                       role="button">Escolher</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+
+</html>

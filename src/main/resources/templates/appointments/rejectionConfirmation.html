@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'appointments','Contestação de consulta')}"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<body>
+
+<!-- Conteúdo da página -->
+<div class="row align-items-center justify-content-center" style="margin-top: 50px">
+<div th:if="${type == 'request'}">
+    <div th:if="${result}">
+        <p>Você informou que esta consulta não aconteceu.</p>
+        <p>Se o estagiário confirmar, a consulta não será encerrada como realizada.</p>
+    </div>
+
+    <div th:if="${result==false}">
+        <p>Ocorreu um erro.</p>
+        <p>Verifique se esta consulta já não foi contestada.</p>
+    </div>
+
+</div>
+
+<div  th:if="${type == 'accept'}">
+    <div th:if="${result}">
+        <p>A consulta foi marcada como não realizada.</p>
+        <p>Ela não será encerrada como realizada.</p>
+    </div>
+
+    <div th:if="${result==false}">
+        <p>Ocorreu um erro.</p>
+        <p>Verifique se esta consulta já não foi contestada.</p>
+    </div>
+
+</div>
+
+<div sec:authorize="!isAuthenticated()">
+    <p>Você pode entrar <a th:href="@{/login}">aqui</a></p>
+</div>
+</div>
+</div>
+
+</body>
+
+</html>

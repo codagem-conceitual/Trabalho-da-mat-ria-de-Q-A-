@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+
+<body>
+<p>Olá, <span th:text="${appointment.customer.firstName}"></span>.</p>
+<p>O estagiário confirmou que esta consulta não aconteceu:</p>
+<p>Data e hora: <span th:text="${#temporals.format(appointment.start, 'dd/MM/yyyy HH:mm')}"></span></p>
+<p>Especialidade: <span th:text="${appointment.work.name}"></span></p>
+<p>Duração: <span th:text="${appointment.work.duration}"></span> min</p>
+<p>Valor: <span th:text="${appointment.work.price > 0 ? 'R$ ' + #numbers.formatDecimal(appointment.work.price, 1, 'POINT', 2, 'COMMA') : 'Gratuito'}"></span></p>
+
+<p><strong>O status dela agora é "Contestação aceita" e ela não será encerrada como realizada.</strong></p>
+
+<p>Equipe ClínicaFácil</p>
+</body>
+</html>

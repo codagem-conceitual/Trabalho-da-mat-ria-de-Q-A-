@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'','Escolher estagiário')}"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<body>
+<div class="row justify-content-center mt-4">
+    <div class="col-12 text-center">
+        <h3>Nova consulta</h3>
+        <p class="text-muted">Passo 1 de 3: escolha o estagiário que vai fazer o atendimento.</p>
+    </div>
+</div>
+<div class="row align-items-center justify-content-center">
+
+    <div class="col-md-3 m-3" th:each="provider : ${providers}">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body text-center">
+                <h5 class="card-title"><span th:text="${provider.firstName +' ' +provider.lastName}"> Nome
+                            Sobrenome</span></h5>
+                <p sec:authorize="hasRole('ROLE_CUSTOMER_RETAIL')"
+                   th:text="${'Especialidades: '+ #strings.listJoin(provider.getRetailWorks().![name], ', ')}">Especialidades: Psicologia</p>
+                <p sec:authorize="hasRole('ROLE_CUSTOMER_CORPORATE')"
+                   th:text="${'Especialidades: '+ #strings.listJoin(provider.getCorporateWorks().![name], ', ')}">Especialidades: Psicologia</p>
+                <a th:href="@{'/appointments/new/'+${provider.id}}" class="btn btn-primary">Escolher</a>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>

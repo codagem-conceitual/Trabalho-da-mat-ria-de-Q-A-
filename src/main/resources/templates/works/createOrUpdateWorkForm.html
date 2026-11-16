@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'works','Especialidade')}"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<body>
+<div class="row" style="margin-top: 50px" ;>
+    <div class="col-md-2 text-center"></div>
+    <div class="col-md-8 text-center">
+        <div class="card">
+            <div class="card-header">
+                Cadastrar ou alterar especialidade
+            </div>
+            <div class="card-body">
+
+                <form th:action="@{/works/new}" th:object="${work}" method="POST">
+                    <input type="hidden" th:field="*{id}" th:value="${work.id}">
+                    <div class="form-group row">
+                        <label for="name" class="col-md-3 col-form-label">Nome</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="Ex.: Psicologia">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="price" class="col-md-3 col-form-label">Valor (R$)</label>
+                        <div class="col-md-9">
+                            <input type="number" class="form-control" th:field="*{price}" placeholder="0 para gratuito">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="duration" class="col-md-3 col-form-label">Duração (min)</label>
+                        <div class="col-md-9">
+                            <input type="number" class="form-control" th:field="*{duration}" placeholder="Ex.: 50">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="duration" class="col-md-3 col-form-label">Descrição</label>
+                        <div class="col-md-9">
+                                <textarea class="form-control" th:field="*{description}" rows="3"
+                                          placeholder="Descrição do atendimento"></textarea>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="targetCustomer" value="retail">
+
+                    <div class="form-group row">
+                        <legend class="col-form-label col-md-3 pt-0">O paciente pode cancelar?</legend>
+                        <div class="col-md-9">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="editable" id="option1" value="1"
+                                       th:checked="*{editable}">
+                                <label class="form-check-label" for="option1">Sim</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="editable" id="option2" value="0"
+                                       th:checked="*{editable == false}">
+                                <label class="form-check-label" for="option2">Não</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center">
+
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 text-center"></div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+
+<body>
+<p>Olá, <span th:text="${recipent.firstName}"></span>.</p>
+<p>Você tem uma nova mensagem nesta consulta:</p>
+<p>Data e hora: <span th:text="${#temporals.format(appointment.start, 'dd/MM/yyyy HH:mm')}"></span></p>
+<p>Especialidade: <span th:text="${appointment.work.name}"></span></p>
+
+<p>Clique <a th:href="${url}">aqui</a> para ler.</p>
+
+<p>Equipe ClínicaFácil</p>
+</body>
+</html>

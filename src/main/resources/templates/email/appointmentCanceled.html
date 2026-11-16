@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+
+<body>
+<p th:if="${canceler =='customer'}">Olá, <span th:text="${appointment.provider.firstName}"></span>.</p>
+<p th:if="${canceler =='provider'}">Olá, <span th:text="${appointment.customer.firstName}"></span>.</p>
+<p>Esta consulta foi cancelada pelo <span th:text="${canceler == 'customer' ? 'paciente' : 'estagiário'}"></span>:</p>
+<p>Data e hora: <span th:text="${#temporals.format(appointment.start, 'dd/MM/yyyy HH:mm')}"></span></p>
+<p>Especialidade: <span th:text="${appointment.work.name}"></span></p>
+<p th:if="${canceler =='customer'}">Estagiário: <span th:text="${appointment.provider.firstName + ' ' + appointment.provider.lastName}"></span></p>
+<p th:if="${canceler =='provider'}">Paciente: <span th:text="${appointment.customer.firstName + ' ' + appointment.customer.lastName}"></span></p>
+<p>Duração: <span th:text="${appointment.work.duration}"></span> min</p>
+<p>Valor: <span th:text="${appointment.work.price > 0 ? 'R$ ' + #numbers.formatDecimal(appointment.work.price, 1, 'POINT', 2, 'COMMA') : 'Gratuito'}"></span></p>
+
+<p>Equipe ClínicaFácil</p>
+</body>
+</html>

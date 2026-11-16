@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+
+<body>
+<p>Olá, <span th:text="${newAppointment.getCustomer().getFirstName()}"></span>.</p>
+<p>Outro paciente quer trocar o horário dele com a sua consulta.</p>
+<p>Data da sua consulta: <span th:text="${#temporals.format(newAppointment.start, 'dd/MM/yyyy HH:mm')}"></span></p>
+<p>Data da consulta do outro paciente: <span th:text="${#temporals.format(oldAppointment.start, 'dd/MM/yyyy HH:mm')}"></span></p>
+
+<p>Clique <a th:href="${url}">aqui</a> para ver e responder.</p>
+
+<p>Equipe ClínicaFácil</p>
+</body>
+</html>

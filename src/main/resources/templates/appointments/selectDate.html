@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'','Escolher horário')}"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<body>
+<div class="row justify-content-center mt-4">
+    <div class="col-12 text-center">
+        <h3>Nova consulta</h3>
+        <p class="text-muted">Passo 3 de 3: escolha o dia (setas) e clique em um horário livre.</p>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-3">
+
+    </div>
+    <div class="col-6">
+        <div id='calendar'></div>
+    </div>
+    <div class="col-3">
+
+    </div>
+</div>
+</div>
+
+<script th:inline="javascript">
+
+
+    $(function () {
+        $('#calendar').fullCalendar({
+            defaultView: 'listDay',
+            contentHeight: "auto",
+            noEventsMessage: 'Nenhum horário livre neste dia',
+            buttonText: {today: 'Hoje'},
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho',
+                'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+            dayNames: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+            titleFormat: 'DD/MM/YYYY',
+            listDayFormat: 'dddd',
+            listDayAltFormat: 'DD [de] MMMM',
+            validRange: function (nowDate) {
+                return {
+                    // a partir de amanhã, desde 00:00 (sem startOf a hora atual escondia horários de amanhã)
+                    start: nowDate.clone().add(1, 'days').startOf('day')
+                };
+            },
+            header: {
+                left: 'title',
+                center: '',
+                right: 'today prev,next'
+            },
+            allDaySlot: false,
+            minTime: "06:00:00",
+            maxTime: "21:00:00",
+            firstDay: 2,
+            timeFormat: 'H:mm', // H maiúsculo = relógio de 24 horas
+            eventSources: [
+
+                // de onde vêm os horários livres
+                {
+                    events: function (start, end, timezone, callback) {
+                        var url = [[${ '/api/availableHours/'+providerId + '/' + workId + '/' }]] + start.format('YYYY-MM-DD').toString();
+                        console.log(url);
+                        $.ajax({
+                            url: url,
+                            data: {},
+                            success: function (doc) {
+
+                                var x = doc.map(function (entry) {
+                                    var URL = [[${ '/appointments/new/'+providerId + '/' + workId + '/' }]] + entry.start;
+                                    entry.url = URL;
+                                    return entry;
+                                });
+                                callback(x);
+                            }
+                        });
+                    },
+                    color: 'white',
+                    textColor: 'black'
+                }
+            ]
+
+        })
+
+    });
+
+
+</script>
+</body>
+
+</html>

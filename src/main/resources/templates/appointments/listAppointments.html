@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      th:replace="~{fragments/layout :: layout (~{::body},'appointments','Consultas')}">
+
+<body>
+
+<!-- Conteúdo da página -->
+<div class="row align-items-center justify-content-center" style="margin-top: 50px">
+    <div th:fragment="customerAppointments">
+
+
+        <table id="appointments" class="table text-center">
+            <thead class="thead-dark">
+            <tr>
+                <th> Especialidade</th>
+                <th> Status</th>
+                <th> Data e hora</th>
+                <th sec:authorize="!hasRole('ROLE_PROVIDER')"> Estagiário</th>
+                <th sec:authorize="!hasRole('ROLE_CUSTOMER')"> Paciente</th>
+                <th> Duração</th>
+                <th> Ação</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${appointments == null}">
+                <td colspan="2"> Nenhuma consulta</td>
+            </tr>
+            <tr th:each="appointment : ${appointments}"
+                th:classappend="${appointment.status.name() == 'CANCELED' || appointment.status.name()  == 'FINISHED' || appointment.status.name()  == 'INVOICED' || appointment.status.name()  == 'REJECTION_REQUESTED' || appointment.status.name()  == 'REJECTED'} ? table-secondary : table-success">
+                <td><span th:text="${appointment.work.name}"> Work </span></td>
+                <td><th:block th:replace="fragments/status :: label(${appointment.status.name()})">Agendada</th:block></td>
+                <td th:attr="data-order=${#temporals.format(appointment.start, 'yyyy-MM-dd HH:mm')}"><span
+                        th:text="${#temporals.format(appointment.start, 'dd/MM/yyyy HH:mm')}"> 21/01/2019 15:00</span>
+                </td>
+                <td sec:authorize="!hasRole('ROLE_PROVIDER')"><span
+                        th:text="${appointment.provider.firstName + ' ' + appointment.provider.lastName}">
+                                Provider </span>
+                </td>
+                <td sec:authorize="!hasRole('ROLE_CUSTOMER')"><span
+                        th:text="${appointment.customer.firstName + ' ' + appointment.customer.lastName}">
+                                Customer </span>
+                </td>
+                <td><span th:text="${appointment.work.duration + ' min'}"> 60 min </span></td>
+                <td><a class="btn btn-secondary" th:href="@{'/appointments/' + ${appointment.id}}"
+                       role="button">Detalhes</a></td>
+            </tr>
+            </tbody>
+            <tfoot class="text-primary">
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th  sec:authorize="hasRole('ROLE_ADMIN')"></th>
+            </tr>
+            </tfoot>
+        </table>
+        <div sec:authorize="hasRole('ROLE_CUSTOMER')" class="text-center">
+            <a class="btn btn-primary mt-2" th:href="@{/appointments/new}" role="button">Nova consulta</a>
+        </div>
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#appointments').DataTable({
+                "dom": '<"toolbar">lrtip',
+                "bFilter": true,
+                "bLengthChange": false,
+                "order": [
+                    [2, "asc"]
+                ],
+                "language": {
+                    "emptyTable": "Nenhuma consulta",
+                    "zeroRecords": "Nenhuma consulta com esse status",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ consultas",
+                    "infoEmpty": "Nenhuma consulta",
+                    "infoFiltered": "(de _MAX_ no total)",
+                    "paginate": {"previous": "Anterior", "next": "Próxima"}
+                },
+                "initComplete": function () {
+                    this.api().columns([1]).every(function () {
+                        $("div.toolbar").html('<div id="my_filter" style="margin-bottom: 10px">Filtrar por status: </div>');
+                        var column = this;
+                        column.search('^Agendada$', true, false).draw();
+                        var select = $('<select name="statuses"><option value="Agendada">Agendada</option></select>')
+                            .appendTo('#my_filter')
+                            .on('change', function () {
+                                var searchString = $(this).val();
+                                searchString = searchString.replace('<span>', '');
+                                searchString = searchString.replace('</span>', '');
+                                var val = $.fn.dataTable.util.escapeRegex(searchString);
+                                column.search(val ? '^' + val + '$' : '', true, false).draw();
+                            });
+                        statuses.forEach(function (d) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                }
+            });
+        });
+
+        // mesmos nomes de fragments/status.html
+        var statuses = [
+            'Realizada',
+            'Confirmada',
+            'Encerrada',
+            'Cancelada',
+            'Contestação negada',
+            'Contestação pedida',
+            'Contestação aceita',
+            'Troca pedida'];
+    </script>
+</div>
+
+
+</body>
+
+
+</html>

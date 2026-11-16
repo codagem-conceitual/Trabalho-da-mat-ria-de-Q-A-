@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head></head>
+
+<body>
+<p>Olá, <span th:text="${exchangeRequest.getRequestor().getCustomer().getFirstName()}"></span>.</p>
+<p>Seu pedido de troca de horário foi recusado.</p>
+<p>Sua consulta continua marcada para: <span th:text="${#temporals.format(exchangeRequest.getRequestor().getStart(), 'dd/MM/yyyy HH:mm')}"></span></p>
+
+<p>Clique <a th:href="${url}">aqui</a> para ver a sua consulta.</p>
+
+<p>Equipe ClínicaFácil</p>
+</body>
+</html>

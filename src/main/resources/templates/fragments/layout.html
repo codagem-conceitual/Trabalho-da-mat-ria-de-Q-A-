@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR" th:fragment="layout (content, activeLink, pageTitle)" xmlns:th="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:text="${pageTitle} + ' - ClínicaFácil'">ClínicaFácil</title>
+
+    <!-- CSS da conversa da consulta -->
+    <link rel="stylesheet" th:href="@{/css/vendor/chat.css}"/>
+    <!-- CSS do Bootstrap -->
+    <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <!-- CSS do calendário (FullCalendar) -->
+    <link rel="stylesheet" th:href="@{/css/vendor/fullcalendar.css}"/>
+    <!-- CSS do site -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <!-- CSS das tabelas (DataTables) -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+
+    <link rel="stylesheet" th:href="@{/css/vendor/bootstrap-notifications.css}"/>
+
+
+    <!-- ícones (Font Awesome) -->
+    <script src="https://kit.fontawesome.com/56438f342e.js"></script>
+
+    <!--jQuery-->
+    <script src="/webjars/jquery/3.3.1-2/jquery.min.js"></script>
+    <!-- JavaScript do Bootstrap -->
+    <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- datas (Moment) -->
+    <script type="text/javascript" th:src="@{/js/vendor/moment.js}"></script>
+    <!-- calendário (FullCalendar) -->
+    <script type="text/javascript" th:src="@{/js/vendor/fullcalendar.js}"></script>
+    <!-- tabelas (DataTables) -->
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+</head>
+
+<body>
+
+<!-- Menu -->
+<div sec:authorize="isAuthenticated()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">ClínicaFácil</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Abrir menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <th:block sec:authorize="hasRole('ROLE_CUSTOMER')">
+                <!-- menu do paciente -->
+                <div th:replace="fragments/customer-nav.html :: navlinks(${activeLink})"></div>
+            </th:block>
+
+            <th:block sec:authorize="hasRole('ROLE_PROVIDER')">
+                <!-- menu do estagiário -->
+                <div th:replace="fragments/provider-nav.html :: navlinks(${activeLink})"></div>
+            </th:block>
+
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                <!-- menu da coordenação -->
+                <div th:replace="fragments/admin-nav.html :: navlinks(${activeLink})"></div>
+            </th:block>
+            <!-- notificações -->
+
+
+
+
+            <!-- notificações -->
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown dropdown-notifications open">
+                        <a th:href="@{/notifications}" class="nav-link dropdown-toggle">
+                            <i id="notifications-count" data-count="2" class="fas fa-bell" aria-label="Notificações"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <p class="navbar-nav ml-auto navbar-text"> Conectado como:
+                            <span sec:authentication="name">usuário</span> | </p>
+                    </li>
+                    <li>
+                        <form th:action="@{/perform_logout}" id="logout" method="POST">
+                            <a class="nav-link" href="#"
+                               onclick="document.getElementById('logout').submit(); return false;">Sair</a>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<!-- Conteúdo da página -->
+<div class="container">
+    <th:block th:include="${content}"/>
+    <div class="row align-items-center justify-content-center" style="margin-top: 50px">
+        <p class="text-center text-muted small">
+            ClínicaFácil<br/>
+            Baseado no AppointmentScheduler (Tomasz Słabiak, licença MIT)
+        </p>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    function fetchdata(){
+        $.ajax({
+            url: '/api/user/notifications',
+            type: 'get',
+            success: function(data){
+                var elemennt = document.getElementById("notifications-count");
+                if(data>0){
+                    elemennt.setAttribute("data-count",data);
+                    elemennt.className = "fas fa-bell notification-icon";
+                } else{
+                    elemennt.setAttribute("data-count",0);
+                    elemennt.className = "fas fa-bell";
+                }
+            },
+            complete:function(data){
+                setTimeout(fetchdata,5000);
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        fetchdata();
+        setTimeout(fetchdata,5000);
+    });
+
+</script>
+
+</body>
+
+</html>
