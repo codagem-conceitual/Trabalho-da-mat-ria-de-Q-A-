@@ -100,6 +100,16 @@ mvnw test -DskipITs
 Os testes ficam em `src/test/java`. Os testes de integração (arquivos que terminam em `IT`) precisam do Docker
 e por isso ficam de fora do comando acima.
 
+Testes de integração da equipe (rodam sem Docker, com o banco H2):
+
+```bash
+mvnw verify -Dtest=Nenhum -DfailIfNoTests=false -Dit.test=InvoiceControllerSecurityIT,SecurityConfigurationIT,AppointmentRejectionSecurityIT
+```
+
+Testes da auditoria (cenários 1 a 12, 22 a 24, 32 a 36): `AppointmentCancellationTest`, `ExchangeServiceTest`,
+`InvoiceControllerSecurityIT`, `SecurityConfigurationIT` e `AppointmentRejectionSecurityIT`. Os que falham
+mostram defeitos reais do sistema que ainda não foram corrigidos.
+
 Testes criados pela equipe:
 
 - `HorariosLivresTest`: confere que marcar uma consulta não esconde os outros horários do mesmo turno e que
